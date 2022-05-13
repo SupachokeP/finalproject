@@ -1,0 +1,35 @@
+html
+	head
+		include includes/header.pug
+	body
+		include includes/navbar.pug
+		div.container
+			div.card.mt-3
+				div.card-header.text-center
+					h4.my-3 เพิ่มข้อมูลผู้ป่วย 
+				div.card-body
+					form.form-group(action='/addpatient' method='POST')
+						div.form-group-row.mb-3
+							label.form-label(for='post_room') ห้อง
+							input#post_room.form-control(type='number' name='patient_room' placeholder='Enter Room' required='')
+						div.form-group-row.mb-3
+							label.form-label(for='post_name') ชื่อ
+							input#post_name.form-control(type='text' name='patient_name' placeholder='Name' required='')
+						div.form-group-row.mb-3
+							label.form-label(for='post_age') อายุ
+							input#post_age.form-control(name='patient_age' placeholder='Age' required='')
+						div.form-group-row.mb-3
+							label.form-label(for='post_gender') เพศ (กรอก male หรือ female)
+							select#post_gender.form-select(name='patient_gender') 
+								option(value='male') #{'ชาย'}
+								option(value='female') #{'หญิง'}
+						div.form-group-row.mb-3
+							label.form-label(for='post_sym') อาการป่วย
+							textarea#post_sym.form-control(type='text' name='patient_sym' placeholder='Enter Sym' required='')
+						div.form-group-row.mb-3
+							label.form-label(for='post_tel') เบอร์โทรศัพท์ผู้ติดต่อ
+							input#post_tel.form-control(type='text' name='patient_tel' placeholder='Enter Tel' required='')
+						br
+						center
+							button.btn.btn-success.me-2(type='submit') <i class="bi bi-save me-1"></i> บันทึกข้อมูล
+							a.btn.btn-info(href='/show') <i class="bi bi-backspace"></i> ย้อนกลับ

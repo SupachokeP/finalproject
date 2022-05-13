@@ -1,0 +1,27 @@
+html
+    head
+        include includes/header.pug
+    body
+        nav(class="navbar navbar-expand-lg navbar-light sticky-top" style="background-color: darkgrey;")
+            div(class='container justify-content-center')
+                div.navbar-brand
+                    h1 ระบบเฝ้าระวัง
+        div.container
+            div.row.mt-3
+                div.col-3
+                div.col-6
+                    div.card
+                        if !isNaN(e)
+                            div(class="alert alert-danger") #{e}
+                        div.card-header.text-center
+                            h3 เข้าสู่ระบบ
+                        div.card-body
+                            form(action="/verify" method="POST")
+                                div.form-group
+                                    label.form-label #{'ชื่อผู้ใช้'} 
+                                    input.form-control(type="text" name="n_user" required)                        
+                                div.form-group.mt-3
+                                    label.form-label #{'รหัสผ่าน'} 
+                                    input.form-control(type="password" name="n_pass" required)
+                                center
+                                    button.btn.btn-success.mt-3(type="submit") <i class="bi bi-box-arrow-in-right me-1"></i> เข้าสู่ระบบ                       

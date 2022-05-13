@@ -1,0 +1,43 @@
+html
+	head
+		include includes/header.pug
+	body
+		include includes/navbar.pug
+		div.container
+			div.card.mt-3
+				div.card-header
+					h3 รายการคนไข้ #{id}
+				div.card-body
+					table.table.table-bordered.table-hover
+						thead
+							tr
+								th.text-center(width='5%') ห้อง
+								th.text-center(width='5%') ID
+								th.text-left(width='20%') ชื่อ
+								th.text-left(width='5%') เพศ
+								th.text-left(width='35%') อาการป่วย
+								th.text-left(width='12%') เบอร์โทรศัพท์ผู้ติดต่อ
+								th.text-left(width='8%') แก้ไข
+								th.text-left(width='8%') ลบ
+
+						for ps in posts
+							tr
+								td=ps.patient_room
+								td=ps.patient_id
+								td=ps.patient_name
+								if ps.patient_gender == "male"
+									td ชาย
+								else if ps.patient_gender == "female"
+									td หญิง
+								else
+									td อื่น ๆ
+								td=ps.patient_sym
+								td=ps.patient_tel
+								td.text-center
+									a.btn.btn-warning.text-white(href='/edit/' + ps.patient_id) <i class="bi bi-pencil me-1"></i> แก้ไข
+								td.text-center
+									a.btn.btn-danger(href='/delete/' + ps.patient_id) <i class="bi bi-trash me-1"></i> ลบ
+					center
+						a.btn.btn-primary.me-2(href='/add') <i class="bi bi-file-plus me-1"></i> เพิ่มข้อมูลผู้ป่วย
+						a.btn.btn-info(href='/') <i class="bi bi-backspace"></i> ย้อนกลับ
+		

@@ -1,0 +1,161 @@
+html
+    head
+        include includes/header.pug
+        script.
+            const socket = io.connect('http://localhost:3000');
+            socket.on('image', (image) => {
+            const imageElm = document.getElementById('image');
+            const imageElm2 = document.getElementById('image2');
+            imageElm.src = `data:image/jpeg;base64,${image}`;
+            imageElm2.src = `data:image/jpeg;base64,${image}`;
+                });
+            //- socket.on('datetime', function (data) {
+            //-     const time = document.getElementById('clock');
+            //-     time.src = 
+            //-     });
+                
+        script. 
+            var alarmSound = new Audio();
+            alarmSound.src = 'http://localhost:3000/stream';
+            var alarmTimer;
+            function setAlarm(button) {
+                var ms = document.getElementById('alarmTime').valueAsNumber;
+                if (isNaN(ms)) {
+                    alert('Invalid Date');
+                    return;
+                }
+                var alarm = new Date(ms);
+                var alarmTime = new Date(alarm.getUTCFullYear(), alarm.getUTCMonth(), alarm.getUTCDate(), alarm
+                    .getUTCHours(), alarm.getUTCMinutes(), alarm.getUTCSeconds());
+                var differenceInMs = alarmTime.getTime() - (new Date()).getTime();
+                if (differenceInMs < 0) {
+                    alert('Specified time is already passed');
+                    return;
+                }
+                alarmTimer = setTimeout(initAlarm, differenceInMs);
+                button.innerText = 'Cancel Alarm';
+                button.setAttribute('onclick', 'cancelAlarm(this);');
+            };
+            function cancelAlarm(button) {
+                clearTimeout(alarmTimer);
+                button.innerText = 'Set Alarm';
+                button.setAttribute('onclick', 'setAlarm(this);')
+            };
+            function initAlarm() {
+                alarmSound.play();
+                document.getElementById('snooze').style.display = '';
+                document.getElementById('alarmstop').style.display = '';
+            };
+            function stopAlarm() {
+                alarmSound.pause();
+                alarmSound.currentTime = 0;
+                document.getElementById('snooze').style.display = 'none';
+                document.getElementById('alarmstop').style.display = 'none';
+                cancelAlarm(document.getElementById('alarmButton'));
+            };
+            function snooze() {
+                stopAlarm();
+                alarmTimer = setTimeout(initAlarm, 300000); // 5 * 60 * 1000 = 5 Minutes
+            };
+        script.
+            var alarmSound2 = new Audio();
+            alarmSound2.src = 'http://localhost:3000/stream';
+            var alarmTimer2;
+            function setAlarm2(button) {
+                var ms2 = document.getElementById('alarmTime2').valueAsNumber;
+                if (isNaN(ms2)) {
+                    alert('Invalid Date');
+                    return;
+                }
+                var alarm2 = new Date(ms2);
+                var alarmTime2 = new Date(alarm2.getUTCFullYear(), alarm2.getUTCMonth(), alarm2.getUTCDate(), alarm2.getUTCHours(), alarm2.getUTCMinutes(), alarm2.getUTCSeconds());
+                var differenceInMs2 = alarmTime2.getTime() - (new Date()).getTime();
+                if (differenceInMs2 < 0) {
+                    alert('Specified time is already passed');
+                    return;
+                }
+                alarmTimer2 = setTimeout(initAlarm2, differenceInMs2);
+                button.innerText = 'Cancel Alarm';
+                button.setAttribute('onclick', 'cancelAlarm2(this);');
+            };
+            function cancelAlarm2(button) {
+                clearTimeout(alarmTimer2);
+                button.innerText = 'Set Alarm';
+                button.setAttribute('onclick', 'setAlarm2(this);')
+            };
+            function initAlarm2() {
+                alarmSound2.play();
+                document.getElementById('snooze2').style.display = '';
+                document.getElementById('alarmstop2').style.display = '';
+            };
+            function stopAlarm2() {
+                alarmSound2.pause();
+                alarmSound2.currentTime = 0;
+                document.getElementById('snooze2').style.display = 'none';
+                document.getElementById('alarmstop2').style.display = 'none';
+                cancelAlarm(document.getElementById('alarmButton2'));
+            };
+            function snooze2() {
+                stopAlarm2();
+                alarmTimer2 = setTimeout(initAlarm, 300000); // 5 * 60 * 1000 = 5 Minutes
+            };
+        //- script.
+        //-     var timeDisplay = document.getElementById("time");
+        //-     function refreshTime() {
+        //-         var dateString = new Date().toLocaleString("en-US", {timeZone: "Asia/Bangkok"});
+        //-         var formattedString = dateString.replace(", ", " - ");
+        //-         timeDisplay.innerHTML = formattedString;
+        //-         }
+        //-     setInterval(refreshTime, 1000);
+            
+            
+
+    body
+        include includes/navbar.pug
+                
+        div.container-fluid
+            div.row.mt-3
+                div.col-6
+                    div.card
+                        div.card-header.text-center
+                            h3 ห้อง 1
+                            p#clock
+                        div.card-body
+                            div.row
+                                div.d-flex.justify-content-center.mb-3
+                                    img#image(height="100%")
+                            div.row
+                                div.col-2
+                                div.col-3
+                                    input#alarmTime.form-control(type="datetime-local")
+                                div.col-7
+                                    button#alarmButton.btn.btn-info.me-2(onclick="setAlarm(this);") #{'Set Alarm'} 
+                                    //- div#alarmOptions(style="display: none;")
+                                    button#snooze.btn.btn-warning.me-2(onclick="snooze();" 
+                                    style="display: none;") #{'Snooze 5 minutes'}
+                                    button#alarmstop.btn.btn-danger(onclick="stopAlarm();" 
+                                    style="display: none;") #{'Stop Alarm'}
+                        div.card-footer.text-center                        
+                            a.btn.btn-success(href='show/1') ดูข้อมูลผู้ป่วยห้อง 1
+                            
+                div.col-6
+                    div.card
+                        div.card-header.text-center
+                            h3 ห้อง 2
+                        div.card-body
+                            div.row
+                                div.d-flex.justify-content-center.mb-3
+                                    img#image2(height="100%")
+                            div.row
+                                div.col-2
+                                div.col-3
+                                    input#alarmTime2.form-control(type="datetime-local")
+                                div.col-7
+                                    button#alarmButton2.btn.btn-info.me-2(onclick="setAlarm2(this);") #{'Set Alarm'} 
+                                    //- div#alarmOptions2(style="display: none;")
+                                    button#snooze2.btn.btn-warning.me-2(onclick="snooze2();" 
+                                    style="display: none;") #{'Snooze 5 minutes'}
+                                    button#alarmstop2.btn.btn-danger(onclick="stopAlarm2();" 
+                                    style="display: none;") #{'Stop Alarm'} 
+                        div.card-footer.text-center                        
+                            a.btn.btn-success(href='show/2') ดูข้อมูลผู้ป่วยห้อง 2                          

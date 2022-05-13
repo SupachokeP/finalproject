@@ -1,0 +1,100 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+    <script>
+        const socket = io.connect('http://localhost:3000');
+        socket.on('image', (image) => {
+            const imageElm = document.getElementById('image');
+            imageElm.src = `data:image/jpeg;base64,${image}`;
+        });
+    </script>
+    <script type="text/javascript">
+        var alarmSound = new Audio();
+        alarmSound.src = 'http://localhost:3000/stream';
+        var alarmTimer;
+
+        function setAlarm(button) {
+            var ms = document.getElementById('alarmTime').valueAsNumber;
+            if (isNaN(ms)) {
+                alert('Invalid Date');
+                return;
+            }
+
+            var alarm = new Date(ms);
+            var alarmTime = new Date(alarm.getUTCFullYear(), alarm.getUTCMonth(), alarm.getUTCDate(), alarm
+                .getUTCHours(), alarm.getUTCMinutes(), alarm.getUTCSeconds());
+
+            var differenceInMs = alarmTime.getTime() - (new Date()).getTime();
+
+            if (differenceInMs < 0) {
+                alert('Specified time is already passed');
+                return;
+            }
+
+            alarmTimer = setTimeout(initAlarm, differenceInMs);
+            button.innerText = 'Cancel Alarm';
+            button.setAttribute('onclick', 'cancelAlarm(this);');
+        };
+
+        function cancelAlarm(button) {
+            clearTimeout(alarmTimer);
+            button.innerText = 'Set Alarm';
+            button.setAttribute('onclick', 'setAlarm(this);')
+        };
+
+        function initAlarm() {
+            alarmSound.play();
+            document.getElementById('alarmOptions').style.display = '';
+        };
+
+        function stopAlarm() {
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            document.getElementById('alarmOptions').style.display = 'none';
+            cancelAlarm(document.getElementById('alarmButton'));
+        };
+
+        function snooze() {
+            stopAlarm();
+            alarmTimer = setTimeout(initAlarm, 300000); // 5 * 60 * 1000 = 5 Minutes
+        };
+    </script>
+</head>
+
+<body>
+    <nav class="navbar justify-content-center" style="background-color: darkgrey;">
+        <div class="container-fluid mx-auto">
+            <div class="navbar-brand mx-auto text-black">ระบบเฝ้าระวัง</div>
+        </div>
+    </nav>
+    <div class="container">
+        <div class="border my-3 border-success rounded-3 row">
+            <div class="d-flex justify-content-center col-8 mb-3">
+                <img id="image" width="1280" height="720">
+            </div>
+
+            <div class="d-flex justify-content-center col-4 my-3">
+                <div class="float-end">
+                    <input class="form-control" id="alarmTime" type="datetime-local">
+                    <button class="btn btn-light" id="alarmButton" onclick="setAlarm(this);">Set Alarm</button>
+                    <div id="alarmOptions" style="display: none;">
+                        <button onclick="snooze();">Snooze 5 minutes</button>
+                        <button onclick="stopAlarm();">Stop Alarm</button>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+</body>
+
+
+</html>
